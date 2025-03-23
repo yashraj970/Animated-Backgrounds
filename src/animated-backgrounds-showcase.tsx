@@ -22,6 +22,7 @@ export default function AnimatedBackgroundsShowcase() {
   const [currentBackground, setCurrentBackground] = useState(0);
 
   const backgrounds = [
+    { component: <ParticleBackground key="particles" />, name: "Particles" },
     {
       component: <GradientWaveBackground key="gradient-wave" />,
       name: "Gradient Wave",
@@ -30,7 +31,6 @@ export default function AnimatedBackgroundsShowcase() {
       component: <FloatingShapesBackground key="floating-shapes" />,
       name: "Floating Shapes",
     },
-    { component: <ParticleBackground key="particles" />, name: "Particles" },
     { component: <GridMeshBackground key="grid-mesh" />, name: "Grid Mesh" },
     { component: <BlobBackground key="blob" />, name: "Blob" },
     {
