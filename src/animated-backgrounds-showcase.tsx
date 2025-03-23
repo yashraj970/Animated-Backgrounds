@@ -11,7 +11,6 @@ import SpotlightBackground from "./backgrounds/spotlight-background";
 import BubblesBackground from "./backgrounds/bubbles-background";
 import RippleBackground from "./backgrounds/ripple-background";
 import GalaxyBackground from "./backgrounds/galaxy-background";
-import NeonCityBackground from "./backgrounds/neon-city-background";
 import FirefliesBackground from "./backgrounds/fireflies-background";
 import GradientWaveBackground from "./backgrounds/gradient-wave";
 import FloatingShapesBackground from "./backgrounds/floating-shapes";
@@ -38,7 +37,6 @@ export default function AnimatedBackgroundsShowcase() {
       component: <GalaxyBackground key="galaxy" />,
       name: "Galaxy & Milky Way",
     },
-    { component: <NeonCityBackground key="neon-city" />, name: "Neon City" },
     { component: <FirefliesBackground key="fireflies" />, name: "Fireflies" },
     { component: <ConfettiBackground key="confetti" />, name: "Confetti" },
     { component: <NoiseBackground key="noise" />, name: "Noise Texture" },
@@ -48,7 +46,7 @@ export default function AnimatedBackgroundsShowcase() {
       name: "Gradient Mesh",
     },
     { component: <SpotlightBackground key="spotlight" />, name: "Spotlight" },
-    // { component: <BubblesBackground key="bubbles" />, name: "Bubbles" },
+    { component: <BubblesBackground key="bubbles" />, name: "Bubbles" },
 
     { component: <RippleBackground key="ripple" />, name: "Ripple Effect" },
   ];
