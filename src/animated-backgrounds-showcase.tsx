@@ -17,12 +17,21 @@ import FloatingShapesBackground from "./backgrounds/floating-shapes";
 import ParticleBackground from "./backgrounds/particles-background";
 import GridMeshBackground from "./backgrounds/grid-mesh-background";
 import BlobBackground from "./backgrounds/blob-background";
+import NightSkyCanvas from "./backgrounds/moon-stars-background";
 
 export default function AnimatedBackgroundsShowcase() {
   const [currentBackground, setCurrentBackground] = useState(0);
 
   const backgrounds = [
     { component: <ParticleBackground key="particles" />, name: "Particles" },
+    {
+      component: <NightSkyCanvas key="moon-stars" />,
+      name: "Moon Stars Background",
+    },
+    {
+      component: <GalaxyBackground key="galaxy" />,
+      name: "Galaxy & Milky Way",
+    },
     {
       component: <GradientWaveBackground key="gradient-wave" />,
       name: "Gradient Wave",
@@ -33,10 +42,7 @@ export default function AnimatedBackgroundsShowcase() {
     },
     { component: <GridMeshBackground key="grid-mesh" />, name: "Grid Mesh" },
     { component: <BlobBackground key="blob" />, name: "Blob" },
-    {
-      component: <GalaxyBackground key="galaxy" />,
-      name: "Galaxy & Milky Way",
-    },
+
     { component: <FirefliesBackground key="fireflies" />, name: "Fireflies" },
     { component: <ConfettiBackground key="confetti" />, name: "Confetti" },
     { component: <NoiseBackground key="noise" />, name: "Noise Texture" },
