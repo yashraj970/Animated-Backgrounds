@@ -1,106 +1,125 @@
-"use client"
-
-import { useEffect, useRef } from "react"
+"use client";
+import { useEffect, useRef } from "react";
 
 export default function CirclesBackground() {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    const ctx = canvas.getContext("2d")
-    if (!ctx) return
+    let animationFrameId: number;
+    const circles: Circle[] = [];
+    let mousePos = { x: -100, y: -100 };
 
-    let animationFrameId: number
-    let circles: Circle[] = []
-    let frame = 0
-
-    // Set canvas dimensions
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-      initCircles()
-    }
-
-    window.addEventListener("resize", resizeCanvas)
-    resizeCanvas()
-
-    // Circle class
     class Circle {
-      x: number
-      y: number
-      radius: number
-      maxRadius: number
-      color: string
-      phase: number
-      speed: number
+      x: number;
+      y: number;
+      baseSize: number;
+      size: number;
+      speed: number;
+      angle: number;
+      targetSize: number;
+      color: string;
 
       constructor() {
-        this.x = Math.random() * canvas.width
-        this.y = Math.random() * canvas.height
-        this.maxRadius = 20 + Math.random() * 80
-        this.radius = this.maxRadius * Math.random()
-        this.color = `hsla(${340 + Math.random() * 40}, 80%, 60%, 0.15)` // Pink to purple
-        this.phase = Math.random() * Math.PI * 2
-        this.speed = 0.02 + Math.random() * 0.03
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.baseSize = 3 + Math.random() * 7;
+        this.size = this.baseSize;
+        this.speed = 0.1 + Math.random() * 0.1;
+        this.angle = Math.random() * Math.PI * 2;
+        this.targetSize = this.baseSize;
+        this.color = `hsla(${200 + Math.random() * 40}, 70%, 70%, 0.1)`; // Soft blue hues
       }
 
       update() {
-        // Pulsate radius
-        this.radius = this.maxRadius * Math.abs(Math.sin(frame * this.speed + this.phase))
+        // Gentle floating movement
+        this.angle += this.speed * 0.1;
+        this.x += Math.cos(this.angle) * 0.5;
+        this.y += Math.sin(this.angle) * 0.5;
+
+        // Mouse interaction
+        const dx = mousePos.x - this.x;
+        const dy = mousePos.y - this.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < 150) {
+          this.targetSize = this.baseSize * 3;
+        } else {
+          this.targetSize = this.baseSize;
+        }
+
+        this.size += (this.targetSize - this.size) * 0.1;
       }
 
       draw() {
-        if (!ctx) return
-
-        ctx.beginPath()
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2)
-        ctx.fillStyle = this.color
-        ctx.fill()
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
       }
     }
 
-    // Initialize circles
-    const initCircles = () => {
-      circles = []
-      const circleCount = Math.floor((canvas.width * canvas.height) / 15000) // Adjust density
+    const init = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+      circles.length = 0;
 
+      // Fewer circles for minimal look
+      const circleCount = Math.floor((canvas.width * canvas.height) / 25000);
       for (let i = 0; i < circleCount; i++) {
-        circles.push(new Circle())
+        circles.push(new Circle());
       }
-    }
+    };
 
-    // Animation loop
     const animate = () => {
-      frame++
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
       // Draw background gradient
-      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height)
-      gradient.addColorStop(0, "#300030") // Dark purple
-      gradient.addColorStop(1, "#100020") // Very dark purple/blue
-      ctx.fillStyle = gradient
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+      gradient.addColorStop(0, "#300030");
+      gradient.addColorStop(1, "#100020");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Update and draw circles
       circles.forEach((circle) => {
-        circle.update()
-        circle.draw()
-      })
+        circle.update();
+        circle.draw();
 
-      animationFrameId = requestAnimationFrame(animate)
-    }
+        // Keep circles within bounds
+        if (circle.x > canvas.width + circle.size) circle.x = -circle.size;
+        if (circle.x < -circle.size) circle.x = canvas.width + circle.size;
+        if (circle.y > canvas.height + circle.size) circle.y = -circle.size;
+        if (circle.y < -circle.size) circle.y = canvas.height + circle.size;
+      });
 
-    animate()
+      animationFrameId = requestAnimationFrame(animate);
+    };
 
-    // Cleanup
+    // Mouse move handler
+    const handleMouseMove = (e: MouseEvent) => {
+      mousePos.x = e.clientX;
+      mousePos.y = e.clientY;
+    };
+
+    // Setup
+    init();
+    window.addEventListener("resize", init);
+    window.addEventListener("mousemove", handleMouseMove);
+    animate();
+
     return () => {
-      window.removeEventListener("resize", resizeCanvas)
-      cancelAnimationFrame(animationFrameId)
-    }
-  }, [])
+      window.removeEventListener("resize", init);
+      window.removeEventListener("mousemove", handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-full h-full pointer-events-none"
+    />
+  );
 }
-
