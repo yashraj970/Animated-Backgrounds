@@ -42,7 +42,7 @@ export default function AnimatedBackgroundsShowcase() {
     { component: <FirefliesBackground key="fireflies" />, name: "Fireflies" },
     { component: <ConfettiBackground key="confetti" />, name: "Confetti" },
     { component: <NoiseBackground key="noise" />, name: "Noise Texture" },
-    // { component: <CirclesBackground key="circles" />, name: "Pulsing Circles" },
+    { component: <CirclesBackground key="circles" />, name: "Pulsing Circles" },
     {
       component: <GradientMeshBackground key="gradient-mesh" />,
       name: "Gradient Mesh",
